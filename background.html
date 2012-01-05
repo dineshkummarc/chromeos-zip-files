@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript" src="js/jszip.js"></script>
+		<script type="text/javascript" src="js/jszip-deflate.js"></script>
+		<script type="text/javascript" src="js/coffee-script.js"></script>
+		<script type="text/javascript" src="js/underscore-min.js"></script>
+
+	</head>
+	<body>
+		<script type="text/coffeescript">
+			console.log("file browser")
+			processFile = (file) ->
+				console.log(file)
+				reader = new FileReader()
+				reader.onloadend = (e) ->
+				dataURL = this.result
+
+				fileAttributes = (dataURL.split(",")[0]).split(";")
+				console.log(fileAttributes)
+				data = dataURL.split(",")[1]
+				isBase64 = _.find(fileAttributes, (attrib) -> return attrib is "base64")
+
+				if (isBase64 is 'base64')
+					zip.add(file.fileName, data, {base64:true})
+				console.log(fileAttributes)
+
+				reader.readAsDataURL(file)
+
+			chrome.fileBrowserHandler.onExecute.addListener( (id, details) ->
+				if (id is 'zipper')
+					fileEntries = details.entries
+					zip = new JSZip()
+					for entry in fileEntries
+						entry.file(processFile(entry), errorHandler)
+					content = zip.generate()
+					location.href="data:application/zip;base64,"+content
+			)
+			errorHandler = (e) ->
+				console.log(e)
+		</script>
+		
+	</body>
+</html>

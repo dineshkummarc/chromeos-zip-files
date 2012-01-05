@@ -1,0 +1,23 @@
+{
+	"name": "File Zipper",
+	"version": "0.0.5",
+	
+	"description": "Extension to create archives on Chrome OS",
+	
+	"offline_enabled": true,
+
+	"file_browser_handlers": [
+		{
+			"id":"zipper",
+			"default_title": "Create archive",
+			"file_filters": [
+				"filesystem:*.*"
+			]
+		}
+	],
+	"permissions": [ 
+		"fileBrowserHandler"
+	],
+	"background_page": "background.html"
+
+}
